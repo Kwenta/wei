@@ -1,0 +1,16 @@
+version: 2.1
+
+parameters:
+  node-version:
+    type: string
+    default: '16.17.0'
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    steps:
+      - checkout
+      - run: yarn install --immutable --immutable-cache
+      - run: yarn dedupe --check
+      - run: yarn pretty:check

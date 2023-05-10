@@ -1,0 +1,23 @@
+{
+  "name": "@synthetixio/wei",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "build"
+  ],
+  "repository": "synthetixio/wei",
+  "author": "Synthetix",
+  "license": "MIT",
+  "scripts": {
+    "pretty": "prettier --write .",
+    "pretty:check": "prettier --check .",
+    "postversion": "git push --follow-tags"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
+  "packageManager": "yarn@3.5.0"
+}
