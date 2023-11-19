@@ -1,14 +1,13 @@
 // https://en.wikipedia.org/wiki/Scale_factor_(computer_science)
 
 // TODO: create a BN extension which works as a replacement for big using scaled integers
-import { hexZeroPad } from '@ethersproject/bytes';
-import { BigNumber } from '@ethersproject/bignumber';
 import Big from 'big.js';
+import { Hex, pad, toHex } from 'viem';
 
 export const WEI_PRECISION = 18;
 Big.DP = WEI_PRECISION;
 
-export type WeiSource = Wei | number | string | BigNumber | Big;
+export type WeiSource = Wei | number | string | Big | bigint;
 
 /**
  * A numeric value in Wei. This enables arithmetic to be performed on Wei types without needing
@@ -48,13 +47,13 @@ export class Wei {
   }
 
   /** Value */
-  readonly bn: BigNumber;
+  readonly bigint: bigint;
 
   /** Decimals (usually WEI_PRECISION) */
   readonly p: number;
 
   get z() {
-    return BigNumber.from(10).pow(BigNumber.from(this.p));
+    return BigInt(10) ** BigInt(this.p);
   }
 
   /**
@@ -73,24 +72,24 @@ export class Wei {
 
     if (n === undefined || n === null) throw new Error('Cannot parse undefined/null as a number.');
     if (Wei.is(n)) {
-      this.bn = n.scale(p).bn;
-    } else if ((n as BigNumber)._isBigNumber) {
-      this.bn = n as BigNumber;
+      this.bigint = n.scale(p).bigint;
+    } else if (typeof n === 'bigint') {
+      this.bigint = n;
     } else if (isWei) {
       // already wei, don't scale again
       if (n instanceof Big) {
-        this.bn = BigNumber.from(n.abs().toFixed(0));
+        this.bigint = BigInt(n.abs().toFixed(0));
       } else {
-        this.bn = BigNumber.from(n);
+        this.bigint = BigInt(n);
       }
     } else if (typeof n === 'string') {
-      this.bn = BigNumber.from(
+      this.bigint = BigInt(
         new Big(n.replaceAll(',', '') as string).mul(new Big(10).pow(this.p)).toFixed(0)
       );
     } else {
       // not wei, scale it
       // TODO: avoid use of Big.js, but this is a really easy way to do the conversion for now
-      this.bn = BigNumber.from(new Big(n as any).mul(new Big(10).pow(this.p)).toFixed(0));
+      this.bigint = BigInt(new Big(n as any).mul(new Big(10).pow(this.p)).toFixed(0));
     }
   }
 
@@ -109,7 +108,7 @@ export class Wei {
       return this;
     }
 
-    return wei(wei(1, p).bn.mul(this.bn).div(this.z));
+    return wei(wei(1, p).mul(this.bigint).div(this.z));
   }
 
   /**
@@ -137,20 +136,20 @@ export class Wei {
    * @returns Resulting string which can be used to sort multiple wei numbers.
    * @memberof Wei
    */
-  toSortable(): string {
+  toSortable(): Hex {
     // TODO: handle sign?
-    return hexZeroPad(Buffer.from(this.bn.toHexString()), 64);
+    return pad(toHex(this.bigint), { size: 64 });
   }
 
   /**
    * Convert the value of this to a BN type. This will always return the value as a scaled Wei
    * integer. If you wish to convert it, simply take the result and divide by `Z`
    *
-   * @returns The value (in Wei) as a BigNumber
+   * @returns The value (in Wei) as a bigint
    * @memberof Wei
    */
-  toBN(): BigNumber {
-    return BigNumber.from(this.bn);
+  toBigInt(): bigint {
+    return this.bigint;
   }
 
   /**
@@ -161,7 +160,7 @@ export class Wei {
    * @memberof Wei
    */
   toBig(asWei = false): Big {
-    const big = new Big(this.bn.toString());
+    const big = new Big(this.bigint.toString());
     return asWei ? big : big.div(new Big(10).pow(this.p));
   }
 
@@ -193,31 +192,31 @@ export class Wei {
   ////////////////////
 
   neg(): Wei {
-    return new Wei(this.bn.mul(-1), this.p, true);
+    return new Wei(this.bigint * -1n, this.p, true);
   }
 
   abs(): Wei {
-    return new Wei(this.bn.abs(), this.p, true);
+    return new Wei(this.bigint > 0n ? this.bigint : -this.bigint, this.p, true);
   }
 
   div(other: WeiSource): Wei {
     other = parseNum(other, this.p);
-    return new Wei(this.bn.mul(this.z).div(other.bn), this.p, true);
+    return new Wei((this.bigint * this.z) / other.bigint, this.p, true);
   }
 
   sub(other: WeiSource): Wei {
     other = parseNum(other, this.p);
-    return new Wei(this.bn.sub(other.bn), this.p, true);
+    return new Wei(this.bigint - other.bigint, this.p, true);
   }
 
   add(other: WeiSource): Wei {
     other = parseNum(other, this.p);
-    return new Wei(this.bn.add(other.bn), this.p, true);
+    return new Wei(this.bigint + other.bigint, this.p, true);
   }
 
   mul(other: WeiSource): Wei {
     other = parseNum(other, this.p);
-    return new Wei(this.bn.mul(other.bn).div(this.z), this.p, true);
+    return new Wei((this.bigint * other.bigint) / this.z, this.p, true);
   }
 
   pow(p: number): Wei {
@@ -225,7 +224,7 @@ export class Wei {
   }
 
   inv(): Wei {
-    return new Wei(this.z.pow(2).div(this.bn), this.p, true);
+    return new Wei((this.z * this.z) / this.bigint, this.p, true);
   }
 
   ///////////////////////////
@@ -234,14 +233,14 @@ export class Wei {
 
   cmp(other: WeiSource): number {
     other = parseNum(other, this.p);
-    if (this.bn.gt(other.bn)) return 1;
-    else if (this.bn.lt(other.bn)) return -1;
+    if (this.bigint > other.bigint) return 1;
+    else if (this.bigint < other.bigint) return -1;
     else return 0;
   }
 
   eq(other: WeiSource): boolean {
     other = parseNum(other, this.p);
-    return this.bn.eq(other.bn);
+    return this.bigint === other.bigint;
   }
 
   /**
@@ -255,7 +254,14 @@ export class Wei {
   feq(other: WeiSource, fuzz: WeiSource): boolean {
     const o = parseNum(other, this.p);
     const f = parseNum(fuzz, this.p);
-    return this.bn.sub(o.bn).abs().lt(f.bn);
+
+    let diff = this.bigint - o.bigint;
+
+    if (diff < 0n) {
+      diff = -diff;
+    }
+
+    return diff < f.bigint;
   }
 
   gt(other: WeiSource): boolean {
