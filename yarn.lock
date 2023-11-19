@@ -1401,33 +1401,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/bignumber@npm:^5.7.0":
-  version: 5.7.0
-  resolution: "@ethersproject/bignumber@npm:5.7.0"
-  dependencies:
-    "@ethersproject/bytes": ^5.7.0
-    "@ethersproject/logger": ^5.7.0
-    bn.js: ^5.2.1
-  checksum: 8c9a134b76f3feb4ec26a5a27379efb4e156b8fb2de0678a67788a91c7f4e30abe9d948638458e4b20f2e42380da0adacc7c9389d05fce070692edc6ae9b4904
-  languageName: node
-  linkType: hard
-
-"@ethersproject/bytes@npm:^5.7.0":
-  version: 5.7.0
-  resolution: "@ethersproject/bytes@npm:5.7.0"
-  dependencies:
-    "@ethersproject/logger": ^5.7.0
-  checksum: 66ad365ceaab5da1b23b72225c71dce472cf37737af5118181fa8ab7447d696bea15ca22e3a0e8836fdd8cfac161afe321a7c67d0dde96f9f645ddd759676621
-  languageName: node
-  linkType: hard
-
-"@ethersproject/logger@npm:^5.7.0":
-  version: 5.7.0
-  resolution: "@ethersproject/logger@npm:5.7.0"
-  checksum: 075ab2f605f1fd0813f2e39c3308f77b44a67732b36e712d9bc085f22a84aac4da4f71b39bee50fe78da3e1c812673fadc41180c9970fe5e486e91ea17befe0d
-  languageName: node
-  linkType: hard
-
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -1922,8 +1895,6 @@ __metadata:
     "@babel/plugin-transform-runtime": ^7.19.6
     "@babel/preset-env": ^7.20.2
     "@babel/preset-typescript": ^7.18.6
-    "@ethersproject/bignumber": ^5.7.0
-    "@ethersproject/bytes": ^5.7.0
     "@types/big.js": ^6.1.6
     "@types/jest": 29.4.2
     "@typescript-eslint/eslint-plugin": ^5.59.5
@@ -2566,13 +2537,6 @@ __metadata:
   version: 6.2.1
   resolution: "big.js@npm:6.2.1"
   checksum: 0b234a2fd56c52bed2798ed2020bcab6fef5e9523b99a05406ad071d1aed6ee97ada9fb8de9576092da74c68825c276e19015743b8d1baea269b60a5c666b0cd
-  languageName: node
-  linkType: hard
-
-"bn.js@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "bn.js@npm:5.2.1"
-  checksum: 3dd8c8d38055fedfa95c1d5fc3c99f8dd547b36287b37768db0abab3c239711f88ff58d18d155dd8ad902b0b0cee973747b7ae20ea12a09473272b0201c9edd3
   languageName: node
   linkType: hard
 

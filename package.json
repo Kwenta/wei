@@ -31,8 +31,6 @@
   },
   "homepage": "https://github.com/Synthetixio/wei",
   "dependencies": {
-    "@ethersproject/bignumber": "^5.7.0",
-    "@ethersproject/bytes": "^5.7.0",
     "big.js": "^6.2.1",
     "viem": "^1.19.3"
   },
