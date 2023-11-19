@@ -97,9 +97,7 @@ describe('Wei numeric type', () => {
 
       const weis = [x, y, z];
 
-      const sortedWeis = [...weis].sort((a, b) => {
-        return a.toNumber() - b.toNumber();
-      });
+      const sortedWeis = [...weis].sort();
 
       const expected = [z, x, y].map((w) => w.toSortable());
 
