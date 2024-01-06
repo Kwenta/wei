@@ -1,6 +1,5 @@
 import { Wei, wei } from './wei';
 import Big from 'big.js';
-import { BigNumber } from '@ethersproject/bignumber';
 
 describe('Wei numeric type', () => {
   describe('Constructor', () => {
@@ -10,38 +9,38 @@ describe('Wei numeric type', () => {
 
     it('constructs from a number', () => {
       const a = new Wei(14.3);
-      expect(a.toBN()).toEqual(BigNumber.from('14300000000000000000'));
+      expect(a.toBigInt()).toEqual(BigInt('14300000000000000000'));
       const b = new Wei(14, 18, true);
-      expect(b.toBN()).toEqual(BigNumber.from('14'));
+      expect(b.toBigInt()).toEqual(BigInt('14'));
     });
 
     it('constructs from a large formatted string', () => {
       const a = new Wei('1,214,114.3');
-      expect(a.toBN()).toEqual(BigNumber.from('1214114300000000000000000'));
+      expect(a.toBigInt()).toEqual(BigInt('1214114300000000000000000'));
     });
 
     it('constructs from a smaller formatted string', () => {
       const a = new Wei('114.3');
-      expect(a.toBN()).toEqual(BigNumber.from('114300000000000000000'));
+      expect(a.toBigInt()).toEqual(BigInt('114300000000000000000'));
     });
 
     it('constructs from a number', () => {
       const a = new Wei('14.3');
-      expect(a.toBN()).toEqual(BigNumber.from('14300000000000000000'));
+      expect(a.toBigInt()).toEqual(BigInt('14300000000000000000'));
       const b = new Wei('14', 18, true);
-      expect(b.toBN()).toEqual(BigNumber.from('14'));
+      expect(b.toBigInt()).toEqual(BigInt('14'));
     });
 
     it('constructs from a Big', () => {
       const a = new Wei(new Big('14.3'));
-      expect(a.toBN()).toEqual(BigNumber.from('14300000000000000000'));
+      expect(a.toBigInt()).toEqual(BigInt('14300000000000000000'));
       const b = new Wei(new Big('14'), 18, true);
-      expect(b.toBN()).toEqual(BigNumber.from('14'));
+      expect(b.toBigInt()).toEqual(BigInt('14'));
     });
 
     it('constructs from a BN', () => {
-      const a = new Wei(BigNumber.from('14'));
-      expect(a.toBN()).toEqual(BigNumber.from('14'));
+      const a = new Wei(BigInt('14'));
+      expect(a.toBigInt()).toEqual(BigInt('14'));
     });
 
     it('copy constructs', () => {
@@ -66,9 +65,9 @@ describe('Wei numeric type', () => {
       expect(v.toString(0, true)).toEqual('923460000000000000000');
     });
 
-    it('converts to a BN', () => {
-      expect(v.toBN()).toEqual(BigNumber.from('923460000000000000000'));
-      expect(v.bn).toEqual(BigNumber.from('923460000000000000000'));
+    it('converts to a BigInt', () => {
+      expect(v.toBigInt()).toEqual(BigInt('923460000000000000000'));
+      expect(v.bigint).toEqual(BigInt('923460000000000000000'));
     });
 
     it('converts to a Big', () => {
@@ -87,8 +86,24 @@ describe('Wei numeric type', () => {
 
     it('converts sortable', () => {
       expect(v.toSortable()).toEqual(
-        '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000003078333230663934663934633961336130303030'
+        '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000320f94f94c9a3a0000'
       );
+    });
+
+    it('sorts properly', () => {
+      const x = new Wei(900n);
+      const y = new Wei(1000n);
+      const z = new Wei(500n);
+
+      const weis = [x, y, z];
+
+      const sortedWeis = [...weis].sort();
+
+      const expected = [z, x, y].map((w) => w.toSortable());
+
+      const actual = sortedWeis.map((w) => w.toSortable());
+
+      expect(actual).toEqual(expected);
     });
   });
 
@@ -103,7 +118,7 @@ describe('Wei numeric type', () => {
 
     it('scales', () => {
       expect(a.scale(15)).toEqual(a);
-      expect(a.scale(18).toBN()).toEqual(BigNumber.from('932460000000000000000'));
+      expect(a.scale(18).toBigInt()).toEqual(BigInt('932460000000000000000'));
     });
 
     it('abs', () => {
