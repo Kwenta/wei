@@ -1,5 +1,5 @@
 {
-  "name": "@synthetixio/wei",
+  "name": "@kwenta/wei",
   "version": "2.74.5",
   "publishConfig": {
     "access": "public"
@@ -8,7 +8,7 @@
     "src",
     "build"
   ],
-  "repository": "synthetixio/wei",
+  "repository": "kwenta/wei",
   "description": "Convenient BigNumber library for web3",
   "source": "./src/index.ts",
   "main": "./build/index.js",
@@ -27,9 +27,9 @@
   "author": "Matthew Conover <git@mconover.dev>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Synthetixio/wei/issues"
+    "url": "https://github.com/kwenta/wei/issues"
   },
-  "homepage": "https://github.com/Synthetixio/wei",
+  "homepage": "https://github.com/kwenta/wei",
   "dependencies": {
     "big.js": "6.2.2",
     "viem": "^1.19.3"
